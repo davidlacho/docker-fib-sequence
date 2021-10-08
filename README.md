@@ -1,0 +1,1 @@
+![architecture](https://raw.githubusercontent.com/davidlacho/docker-fib-sequence/main/docs/architecture.png)
