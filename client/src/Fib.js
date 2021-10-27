@@ -9,7 +9,7 @@ const Fib = () => {
     useEffect(() => {
         fetchValues();
         fetchIndexes();
-    });
+    }, []);
 
     const fetchValues = async () => {
         const values = await axios.get('/api/values/current');
