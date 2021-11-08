@@ -14,6 +14,7 @@ const fib = (index) => index < 2 ? 1 : fib(index - 1) + fib(index - 2);
 
 // Watching for values
 sub.on('message', (channel, message) => {
+    console.log(`calculating value for ${message}`)
     redisClient.hset('values', message, fib(parseInt(message)))
 });
 
