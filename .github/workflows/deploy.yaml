@@ -9,19 +9,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker build -t cygnetops/react-test -f ./client/Dockerfile.dev ./client
-      - run: docker run -e CI=true cygnetops/react-test npm test
+      - name: Docker Login
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build Test Container
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/react-test -f ./client/Dockerfile.dev ./client
+      - name: Run Tests
+        run: docker run -e CI=true ${{ secrets.DOCKER_USERNAME }}/react-test npm test
 
-      - run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-client ./client
-      - run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-nginx ./nginx
-      - run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-api ./api
-      - run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-worker ./worker
+      - name: Build Client
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-client ./client
+      - name: Build Nginx
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-nginx ./nginx
+      - name: Build API
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-api ./api
+      - name: Build Worker
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-worker ./worker
 
-      - run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-client
-      - run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-nginx
-      - run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-api
-      - run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-worker
+      - name: Push Client
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-client
+      - name: Push Nginx
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-nginx
+      - name: Push API
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-api
+      - name: Push Worker
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/multi-worker
 
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
