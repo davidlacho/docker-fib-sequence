@@ -43,6 +43,9 @@ app.get("/values/all", async (req, res) => {
 });
 
 app.get("/values/current", async (req, res) => {
+  if (!redisClient.ready) {
+    res.status(500).send("Redis is not ready")
+  }
   redisClient.hgetall("values", (err, values) => {
     if (err) {
       res.status(500).send(JSON.stringify(err))
