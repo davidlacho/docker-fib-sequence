@@ -39,12 +39,20 @@ redisClient.on("error", function(error) {
   redis_status = JSON.stringify(error);
 });
 
+client.monitor(function(err, res) {
+  console.log("Entering monitoring mode.");
+});
+
+client.on("monitor", function(time, args, rawReply) {
+  redis_status = (time + ": " + args);
+});
+
 const redisPublisher = redisClient.duplicate();
 
 // Express route handlers
 
 app.get("/redis_status", (req, res) => {
-  res.send(redis_status);
+  res.send(JSON.stringify(redis_status))
 });
 
 app.get("/values/all", async (req, res) => {
