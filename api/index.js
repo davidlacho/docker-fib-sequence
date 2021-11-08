@@ -40,6 +40,16 @@ const redisClient = redis.createClient({
     retry_strategy: () => 1000
 });
 
+let redis_ready = false;
+
+redisClient.on("ready",(error) => {
+    if (error) {
+        console.error("Not Ready")
+    } else {
+        redis_ready = true;
+    }
+});
+
 // Make duplicate connections, as if we ever have a client that is
 // listening/publishing on Redis, we have to make a duplicate connection.
 // It cannot be used for other purposes.
@@ -48,7 +58,7 @@ const redisPublisher = redisClient.duplicate();
 // Express Route Handlers
 
 app.get('/', (req, res) => {
-    res.send('Hi');
+    res.send(`Redis: ${redis_ready}`);
 })
 
 app.get('/values/all', async (req, res) => {
