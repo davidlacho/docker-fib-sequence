@@ -11,10 +11,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Docker Login
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build Test Container
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/react-test -f ./client/Dockerfile.dev ./client
-      - name: Run Tests
-        run: docker run -e CI=true ${{ secrets.DOCKER_USERNAME }}/react-test npm test
+#      - name: Build Test Container
+#        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/react-test -f ./client/Dockerfile.dev ./client
+#      - name: Run Tests
+#        run: docker run -e CI=true ${{ secrets.DOCKER_USERNAME }}/react-test npm test
 
       - name: Build Client
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/multi-client ./client
@@ -45,6 +45,7 @@ jobs:
           application_name: multi-docker
           environment_name: MultiDocker-env
           existing_bucket_name: elasticbeanstalk-us-east-1-227786593147
+          use_existing_version_if_available: true
           region: us-east-1
           version_label: ${{ github.sha }}
           deployment_package: deploy.zip
