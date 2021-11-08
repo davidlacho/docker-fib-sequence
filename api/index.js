@@ -45,6 +45,7 @@ let redis_ready = false;
 redisClient.on("ready",(error) => {
     if (error) {
         console.error("Not Ready")
+        redis_ready = JSON.stringify(error);
     } else {
         redis_ready = true;
     }
