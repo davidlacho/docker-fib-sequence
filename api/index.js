@@ -39,12 +39,13 @@ redisClient.on("error", function(error) {
   redis_status = JSON.stringify(error);
 });
 
-client.monitor(function(err, res) {
+redisClient.monitor(function(err, res) {
   console.log("Entering monitoring mode.");
 });
 
-client.on("monitor", function(time, args, rawReply) {
+redisClient.on("monitor", function(time, args, rawReply) {
   redis_status = (time + ": " + args);
+  console.log(redis_status);
 });
 
 const redisPublisher = redisClient.duplicate();
