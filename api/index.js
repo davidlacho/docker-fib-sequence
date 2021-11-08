@@ -32,12 +32,19 @@ const redisClient = redis.createClient({
   port: keys.redisPort,
   retry_strategy: () => 1000,
 });
+
+let redis_status = "Okay"
+
+redisClient.on("error", function(error) {
+  redis_status = JSON.stringify(error);
+});
+
 const redisPublisher = redisClient.duplicate();
 
 // Express route handlers
 
-app.get("/", (req, res) => {
-  res.send("Hi");
+app.get("/redis_status", (req, res) => {
+  res.send(redis_status);
 });
 
 app.get("/values/all", async (req, res) => {
