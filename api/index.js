@@ -66,7 +66,7 @@ app.get("/values/current", async (req, res) => {
     if(err) {
       res.send(err)
     } else {
-      res.send(values);
+      res.status(500).send(values);
     }
   });
 });
