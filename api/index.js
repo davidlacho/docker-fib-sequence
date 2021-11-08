@@ -33,10 +33,10 @@ const redisClient = redis.createClient({
   retry_strategy: () => 1000,
 });
 
-let redis_status = "Okay"
+let redis_status = []
 
 redisClient.on("error", function(error) {
-  redis_status = JSON.stringify(error);
+  redis_status.push(JSON.stringify(error));
 });
 
 redisClient.monitor(function(err, res) {
@@ -44,8 +44,7 @@ redisClient.monitor(function(err, res) {
 });
 
 redisClient.on("monitor", function(time, args, rawReply) {
-  redis_status = (time + ": " + args);
-  console.log(redis_status);
+  redis_status.push(time + ": " + args);
 });
 
 const redisPublisher = redisClient.duplicate();
