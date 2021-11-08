@@ -42,6 +42,12 @@ const redisClient = redis.createClient({
 
 let redis_ready = false;
 
+redisClient.on("error", (error) => {
+    if (error) {
+        redis_ready = JSON.stringify(error);
+    }
+})
+
 redisClient.on("ready",(error) => {
     if (error) {
         console.error("Not Ready")
