@@ -33,27 +33,9 @@ const redisClient = redis.createClient({
   retry_strategy: () => 1000,
 });
 
-let redis_status = []
-
-redisClient.on("error", function(error) {
-  redis_status.push(JSON.stringify(error));
-});
-
-redisClient.monitor(function(err, res) {
-  console.log("Entering monitoring mode.");
-});
-
-redisClient.on("monitor", function(time, args, rawReply) {
-  redis_status.push(time + ": " + args);
-});
-
 const redisPublisher = redisClient.duplicate();
 
 // Express route handlers
-
-app.get("/redis_status", (req, res) => {
-  res.send(JSON.stringify(redis_status))
-});
 
 app.get("/values/all", async (req, res) => {
   const values = await pgClient.query("SELECT * from values");
@@ -63,11 +45,10 @@ app.get("/values/all", async (req, res) => {
 
 app.get("/values/current", async (req, res) => {
   redisClient.hgetall("values", (err, values) => {
-    if(err) {
-      res.send(err)
-    } else {
-      res.status(500).send(values);
+    if (err) {
+      res.status(500).send(JSON.stringify(err))
     }
+    res.send(values);
   });
 });
 
